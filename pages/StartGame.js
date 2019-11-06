@@ -8,11 +8,15 @@ import {
   Keyboard,
   Alert
 } from "react-native";
+
+import BodyText from "../components/BodyText";
+import MainButton from "../components/MainButton";
 import Card from "../components/Card";
 import Input from "../components/Input";
+import NumberContainer from "../components/NumberContainer";
 import Colors from "../constants/colors";
 
-const StartGame = () => {
+const StartGame = ({ startGameHandler }) => {
   const [value, setValue] = useState("");
   const [confirmed, setConfirmed] = useState(false);
   const [selectedNumber, setSelectedNumber] = useState();
@@ -37,11 +41,20 @@ const StartGame = () => {
     setConfirmed(true);
     setValue("");
     setSelectedNumber(parseInt(value));
+    Keyboard.dismiss();
   };
 
   let confirmedOutput;
   if (confirmed) {
-    confirmedOutput = <Text>Chosen number: {selectedNumber}</Text>;
+    confirmedOutput = (
+      <Card style={styles.summaryContainer}>
+        <BodyText>You selected</BodyText>
+        <NumberContainer>{selectedNumber}</NumberContainer>
+        <MainButton onPress={() => startGameHandler(selectedNumber)}>
+          START GAME
+        </MainButton>
+      </Card>
+    );
   }
 
   // USing touchable to hide the keyboard on iOS beacause blurOnSubmit dont work, onPress dismiss the keyboard
@@ -52,9 +65,9 @@ const StartGame = () => {
       }}
     >
       <View style={styles.screen}>
-        <Text style={styles.title}>Start a New Game!</Text>
+        <BodyText style={styles.title}>Start a New Game!</BodyText>
         <Card style={styles.inputContainer}>
-          <Text>Select a Number</Text>
+          <BodyText>Select a Number</BodyText>
           <Input
             style={styles.input}
             blurOnSubmit
@@ -101,7 +114,8 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 20,
-    marginVertical: 10
+    marginVertical: 10,
+    fontFamily: "CrazyCock"
   },
   inputContainer: {
     width: "85%",
@@ -113,6 +127,10 @@ const styles = StyleSheet.create({
   input: {
     width: "20%",
     textAlign: "center"
+  },
+  summaryContainer: {
+    marginTop: 20,
+    alignItems: "center"
   }
 });
 
